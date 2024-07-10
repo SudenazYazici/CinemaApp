@@ -187,6 +187,7 @@ namespace CinemaApp.Controllers
             user.Name = request.Name;
             user.Email = request.Email;
             user.Password = passwordHash;
+            user.BirthDate = request.BirthDate;
             //user.ConfirmPassword = confirmPasswordHash;
 
             _userRepository.CreateUser(user);
