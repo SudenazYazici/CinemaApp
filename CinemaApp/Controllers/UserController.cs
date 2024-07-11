@@ -57,7 +57,7 @@ namespace CinemaApp.Controllers
             return Ok(user);
         }
 
-        [HttpGet("{id}/tickets")] // not sure if necessary
+        [HttpGet("{id}/tickets")] 
         [ProducesResponseType(200, Type = typeof(Ticket))]
         [ProducesResponseType(400)]
         public IActionResult GetTicketsByUser(int id)
@@ -231,7 +231,14 @@ namespace CinemaApp.Controllers
 
             string token = CreateToken(user);
 
-            return Ok(token);
+            var loggedInUser = new LoggedInDto();
+            loggedInUser.Id = user.Id;
+            loggedInUser.Name = user.Name;
+            loggedInUser.Email = user.Email;
+            loggedInUser.BirthDate = user.BirthDate;
+            loggedInUser.Token = token;
+
+            return Ok(loggedInUser);
         }
 
         private string CreateToken(User user)
