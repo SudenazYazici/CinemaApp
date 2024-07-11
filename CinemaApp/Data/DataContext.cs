@@ -20,7 +20,13 @@ namespace CinemaApp.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            // check later
+
+            modelBuilder.Entity<Cinema>() //check later
+                .HasMany(c => c.CinemaHalls)
+                .WithOne(ch => ch.Cinema)
+                .HasForeignKey(ch => ch.CinemaId)
+                .OnDelete(DeleteBehavior.SetNull);
+
             modelBuilder.Entity<Ticket>()
                 .HasOne(t => t.User)
                 .WithMany(u => u.Tickets)
@@ -37,13 +43,13 @@ namespace CinemaApp.Data
                 .HasOne(ch => ch.Cinema)
                 .WithMany(c => c.CinemaHalls)
                 .HasForeignKey(ch => ch.CinemaId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.SetNull);
 
             modelBuilder.Entity<Seat>()
                 .HasOne(s => s.CinemaHall)
                 .WithMany(ch => ch.Seats)
                 .HasForeignKey(s => s.CinemaHallId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.SetNull);
 
             modelBuilder.Entity<CinemaMovie>()
                     .HasKey(cm => new { cm.cinemaId, cm.movieId });
@@ -51,12 +57,14 @@ namespace CinemaApp.Data
             modelBuilder.Entity<CinemaMovie>()
                     .HasOne(c => c.cinema)
                     .WithMany(cm => cm.CinemaMovies)
-                    .HasForeignKey(c => c.cinemaId);
+                    .HasForeignKey(c => c.cinemaId)
+                    .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<CinemaMovie>()
                     .HasOne(m => m.movie)
                     .WithMany(cm => cm.CinemaMovies)
-                    .HasForeignKey(m => m.movieId);
+                    .HasForeignKey(m => m.movieId)
+                    .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }
