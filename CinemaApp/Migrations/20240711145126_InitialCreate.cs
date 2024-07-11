@@ -63,7 +63,7 @@ namespace CinemaApp.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     HallNum = table.Column<int>(type: "int", nullable: false),
-                    CinemaId = table.Column<int>(type: "int", nullable: false)
+                    CinemaId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -73,7 +73,7 @@ namespace CinemaApp.Migrations
                         column: x => x.CinemaId,
                         principalTable: "Cinemas",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.SetNull);
                 });
 
             migrationBuilder.CreateTable(
@@ -91,13 +91,13 @@ namespace CinemaApp.Migrations
                         column: x => x.cinemaId,
                         principalTable: "Cinemas",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_CinemaMovies_Movies_movieId",
                         column: x => x.movieId,
                         principalTable: "Movies",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -107,7 +107,7 @@ namespace CinemaApp.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     SeatNum = table.Column<int>(type: "int", nullable: false),
-                    CinemaHallId = table.Column<int>(type: "int", nullable: false)
+                    CinemaHallId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -117,7 +117,7 @@ namespace CinemaApp.Migrations
                         column: x => x.CinemaHallId,
                         principalTable: "CinemaHalls",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.SetNull);
                 });
 
             migrationBuilder.CreateTable(

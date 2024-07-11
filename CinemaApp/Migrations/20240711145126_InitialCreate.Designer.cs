@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CinemaApp.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20240708132743_InitialCreate")]
+    [Migration("20240711145126_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -58,7 +58,7 @@ namespace CinemaApp.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("CinemaId")
+                    b.Property<int?>("CinemaId")
                         .HasColumnType("int");
 
                     b.Property<int>("HallNum")
@@ -115,7 +115,7 @@ namespace CinemaApp.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("CinemaHallId")
+                    b.Property<int?>("CinemaHallId")
                         .HasColumnType("int");
 
                     b.Property<int>("SeatNum")
@@ -206,8 +206,7 @@ namespace CinemaApp.Migrations
                     b.HasOne("CinemaApp.Models.Cinema", "Cinema")
                         .WithMany("CinemaHalls")
                         .HasForeignKey("CinemaId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.Navigation("Cinema");
                 });
@@ -217,13 +216,13 @@ namespace CinemaApp.Migrations
                     b.HasOne("CinemaApp.Models.Cinema", "cinema")
                         .WithMany("CinemaMovies")
                         .HasForeignKey("cinemaId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("CinemaApp.Models.Movie", "movie")
                         .WithMany("CinemaMovies")
                         .HasForeignKey("movieId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("cinema");
@@ -236,8 +235,7 @@ namespace CinemaApp.Migrations
                     b.HasOne("CinemaApp.Models.CinemaHall", "CinemaHall")
                         .WithMany("Seats")
                         .HasForeignKey("CinemaHallId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.Navigation("CinemaHall");
                 });
