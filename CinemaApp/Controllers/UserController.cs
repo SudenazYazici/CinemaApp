@@ -3,6 +3,7 @@ using Azure.Core;
 using CinemaApp.Dto;
 using CinemaApp.Interface;
 using CinemaApp.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -18,8 +19,6 @@ namespace CinemaApp.Controllers
         private readonly IUserRepository _userRepository;
         private readonly IMapper _mapper;
         private readonly IConfiguration _configuration;
-
-        public static User user = new User();
 
 
         public UserController(IUserRepository userRepository, IMapper mapper, IConfiguration configuration)
@@ -165,33 +164,27 @@ namespace CinemaApp.Controllers
             if (!ModelState.IsValid) {
                 return BadRequest();
             }
-
-            var users = _userRepository.GetUsers();
-            for (int i = 0; i < users.Count; i++)
+     
+            if (_userRepository.UserExists(request.Name))
             {
-                var user = _userRepository.GetUsers().ElementAt(i);
-                if (user.Name == request.Name)
-                {
-                    return BadRequest("This user name already has an account. Please change your user name.");
-                }
-                if (user.Email == request.Email)
-                {
-                    return BadRequest("This email already has an account.");
-                }
-
+                return BadRequest("This user has already registered.");
             }
 
             string passwordHash = BCrypt.Net.BCrypt.HashPassword(request.Password);
             //string confirmPasswordHash = BCrypt.Net.BCrypt.HashPassword(request.ConfirmPassword);
 
-            user.Name = request.Name;
-            user.Email = request.Email;
-            user.Password = passwordHash;
-            user.BirthDate = request.BirthDate;
+            var newUser = new User
+            {
+                Name = request.Name,
+                Email = request.Email,
+                Password = passwordHash,
+                BirthDate = request.BirthDate,
+            };
+            
             //user.ConfirmPassword = confirmPasswordHash;
 
-            _userRepository.CreateUser(user);
-            return Ok(user);
+            _userRepository.CreateUser(newUser);
+            return Ok(newUser);
         }
 
         //[HttpPost("login")]
@@ -224,7 +217,9 @@ namespace CinemaApp.Controllers
         [HttpPost("login")]
         public ActionResult<User> Login(LoginDto request)
         {
-            if (user.Email != request.Email)
+            var user = _userRepository.GetUserByEmail(request.Email);
+
+            if (user == null )
             {
                 return BadRequest("Account not found.");
             }

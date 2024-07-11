@@ -19,6 +19,11 @@ namespace CinemaApp.Repository
             return _context.Users.Where(p => p.Name == name).FirstOrDefault();
         }
 
+        public User GetUserByEmail(string email)
+        {
+            return _context.Users.Where(p => p.Email == email).FirstOrDefault();
+        }
+
         public ICollection<User> GetUsers()
         {
             return _context.Users.OrderBy(p => p.Id).ToList();
@@ -28,7 +33,10 @@ namespace CinemaApp.Repository
         {
             return _context.Users.Any(p => p.Id == id);
         }
-
+        public bool UserExists(string name)
+        {
+            return _context.Users.Any(p => p.Name == name);
+        }
         public ICollection<Ticket> GetTicketsByUser(int id)
         {
             return _context.Users
