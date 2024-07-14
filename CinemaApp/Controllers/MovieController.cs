@@ -31,19 +31,19 @@ namespace CinemaApp.Controllers
             return Ok(movies);
         }
 
-        //[HttpGet("{name}")]
-        //[ProducesResponseType(200, Type = typeof(Movie))]
-        //[ProducesResponseType(400)]
-        //public IActionResult GetMovie(string name)
-        //{
-        //    var movie = _mapper.Map<MovieDto>(_movieRepository.GetMovie(name));
-        //    if (!ModelState.IsValid)
-        //    {
-        //        return BadRequest(ModelState);
-        //    }
+        [HttpGet("{name}")]
+        [ProducesResponseType(200, Type = typeof(Movie))]
+        [ProducesResponseType(400)]
+        public IActionResult GetMovie(string name)
+        {
+            var movie = _mapper.Map<MovieDto>(_movieRepository.GetMovie(name));
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
 
-        //    return Ok(movie);
-        //}
+            return Ok(movie);
+        }
 
         [HttpGet("{id}")]
         [ProducesResponseType(200, Type = typeof(Movie))]

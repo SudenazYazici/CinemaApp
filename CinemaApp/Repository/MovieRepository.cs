@@ -13,10 +13,10 @@ namespace CinemaApp.Repository
             return _context.Movies.Where(p => p.Id == id).FirstOrDefault();
         }
 
-        //public Movie GetMovie(string name)
-        //{
-        //    return _context.Movies.Where(p => p.Name == name).FirstOrDefault();
-        //}
+        public Movie GetMovie(string name)
+        {
+            return _context.Movies.Where(p => p.Name == name).FirstOrDefault();
+        }
 
         public ICollection<Movie> GetMovies()
         {

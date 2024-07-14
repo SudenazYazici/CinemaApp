@@ -12,11 +12,28 @@ namespace CinemaApp.Controllers
     public class TicketController : Controller
     {
         private readonly ITicketRepository _ticketRepository;
+        private readonly IUserRepository _userRepository;
+        private readonly ICinemaRepository _cinemaRepository;
+        private readonly ICinemaHallRepository _cinemaHallRepository;
+        private readonly ISeatRepository _seatRepository;
+        private readonly IMovieRepository _movieRepository;
         private readonly IMapper _mapper;
 
-        public TicketController(ITicketRepository ticketRepository, IMapper mapper)
+        public TicketController(
+            ITicketRepository ticketRepository,
+            IUserRepository userRepository,
+            ICinemaRepository cinemaRepository,
+            ICinemaHallRepository cinemaHallRepository,
+            ISeatRepository seatRepository,
+            IMovieRepository movieRepository,
+            IMapper mapper)
         {
             _ticketRepository = ticketRepository;
+            _userRepository = userRepository;
+            _cinemaRepository = cinemaRepository;
+            _cinemaHallRepository = cinemaHallRepository;
+            _seatRepository = seatRepository;
+            _movieRepository = movieRepository;
             _mapper = mapper;
         }
 
@@ -75,6 +92,44 @@ namespace CinemaApp.Controllers
             }
 
             var ticketMap = _mapper.Map<Ticket>(ticketCreate);
+
+            var user = _userRepository.GetUser(ticketCreate.UserId);
+            if (user == null)
+            {
+                ModelState.AddModelError("", "User does not exist");
+                return StatusCode(404, ModelState);
+            }
+
+            var cinema = _cinemaRepository.GetCinema(ticketCreate.CinemaId);
+            if (cinema == null)
+            {
+                ModelState.AddModelError("", "Cinema does not exist");
+                return StatusCode(404, ModelState);
+            }
+
+            var cinemaHall = _cinemaHallRepository.GetCinemaHall(ticketCreate.CinemaHallId);
+            if (cinemaHall == null)
+            {
+                ModelState.AddModelError("", "Cinema Hall does not exist");
+                return StatusCode(404, ModelState);
+            }
+
+            var seat = _seatRepository.GetSeat(ticketCreate.SeatId);
+            if (seat == null)
+            {
+                ModelState.AddModelError("", "Seat does not exist");
+                return StatusCode(404, ModelState);
+            }
+
+            //var movie = _movieRepository.GetMovie(ticketCreate.MovieName);
+
+            ticketMap.User = user;
+            ticketMap.Cinema = cinema;
+            ticketMap.CinemaHall = cinemaHall;
+            ticketMap.Seat = seat;
+            //ticketMap.MovieName = movie;  
+            user.Tickets.Add(ticketMap); // check later
+
             if (!_ticketRepository.CreateTicket(ticketMap))
             {
                 ModelState.AddModelError("", "Something went wrong while saving");

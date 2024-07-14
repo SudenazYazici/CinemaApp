@@ -6,7 +6,7 @@ namespace CinemaApp.Interface
     {
         ICollection<Movie> GetMovies();
         Movie GetMovie(int id);
-        //Movie GetMovie(string name);
+        Movie GetMovie(string name);
 
         bool MovieExists(int id);
         bool CreateMovie(Movie movie);
