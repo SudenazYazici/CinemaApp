@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CinemaApp.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20240711145126_InitialCreate")]
+    [Migration("20240715114758_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -294,8 +294,7 @@ namespace CinemaApp.Migrations
 
             modelBuilder.Entity("CinemaApp.Models.Seat", b =>
                 {
-                    b.Navigation("Ticket")
-                        .IsRequired();
+                    b.Navigation("Ticket");
                 });
 
             modelBuilder.Entity("CinemaApp.Models.User", b =>

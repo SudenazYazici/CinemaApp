@@ -51,6 +51,12 @@ namespace CinemaApp.Data
                 .HasForeignKey(s => s.CinemaHallId)
                 .OnDelete(DeleteBehavior.SetNull);
 
+            modelBuilder.Entity<Seat>()
+                .HasOne(s => s.Ticket)
+                .WithOne(t => t.Seat)
+                .HasForeignKey<Ticket>(t => t.SeatId)
+                .OnDelete(DeleteBehavior.Cascade);
+
             modelBuilder.Entity<CinemaMovie>()
                     .HasKey(cm => new { cm.cinemaId, cm.movieId });
 

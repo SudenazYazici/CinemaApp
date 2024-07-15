@@ -291,8 +291,7 @@ namespace CinemaApp.Migrations
 
             modelBuilder.Entity("CinemaApp.Models.Seat", b =>
                 {
-                    b.Navigation("Ticket")
-                        .IsRequired();
+                    b.Navigation("Ticket");
                 });
 
             modelBuilder.Entity("CinemaApp.Models.User", b =>
