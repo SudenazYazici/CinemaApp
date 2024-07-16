@@ -100,33 +100,33 @@ namespace CinemaApp.Controllers
                 return StatusCode(404, ModelState);
             }
 
-            //var cinema = _cinemaRepository.GetCinema(ticketCreate.CinemaId);
-            //if (cinema == null)
-            //{
-            //    ModelState.AddModelError("", "Cinema does not exist");
-            //    return StatusCode(404, ModelState);
-            //}
+            var cinema = _cinemaRepository.GetCinema(ticketCreate.CinemaId);
+            if (cinema == null)
+            {
+                ModelState.AddModelError("", "Cinema does not exist");
+                return StatusCode(404, ModelState);
+            }
 
-            //var cinemaHall = _cinemaHallRepository.GetCinemaHall(ticketCreate.CinemaHallId);
-            //if (cinemaHall == null)
-            //{
-            //    ModelState.AddModelError("", "Cinema Hall does not exist");
-            //    return StatusCode(404, ModelState);
-            //}
+            var cinemaHall = _cinemaHallRepository.GetCinemaHall(ticketCreate.CinemaHallId);
+            if (cinemaHall == null)
+            {
+                ModelState.AddModelError("", "Cinema Hall does not exist");
+                return StatusCode(404, ModelState);
+            }
 
-            //var seat = _seatRepository.GetSeat(ticketCreate.SeatId);
-            //if (seat == null)
-            //{
-            //    ModelState.AddModelError("", "Seat does not exist");
-            //    return StatusCode(404, ModelState);
-            //}
+            var seat = _seatRepository.GetSeat(ticketCreate.SeatId);
+            if (seat == null)
+            {
+                ModelState.AddModelError("", "Seat does not exist");
+                return StatusCode(404, ModelState);
+            }
 
-            //var movie = _movieRepository.GetMovie(ticketCreate.MovieName);
-            //if (movie == null)
-            //{
-            //    ModelState.AddModelError("", "Movie does not exist");
-            //    return StatusCode(404, ModelState);
-            //}
+            var movie = _movieRepository.GetMovie(ticketCreate.MovieName);
+            if (movie == null)
+            {
+                ModelState.AddModelError("", "Movie does not exist");
+                return StatusCode(404, ModelState);
+            }
 
             //ticketMap.User = user;
             //ticketMap.Cinema = cinema;
