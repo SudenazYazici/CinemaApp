@@ -31,7 +31,7 @@ namespace CinemaApp.Controllers
             return Ok(movies);
         }
 
-        [HttpGet("{name}")]
+        [HttpGet("by-name/{name}")]
         [ProducesResponseType(200, Type = typeof(Movie))]
         [ProducesResponseType(400)]
         public IActionResult GetMovie(string name)
@@ -45,7 +45,7 @@ namespace CinemaApp.Controllers
             return Ok(movie);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("by-id/{id}")]
         [ProducesResponseType(200, Type = typeof(Movie))]
         [ProducesResponseType(400)]
         public IActionResult GetMovie(int id)
