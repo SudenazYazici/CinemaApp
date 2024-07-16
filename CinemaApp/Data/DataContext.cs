@@ -20,6 +20,12 @@ namespace CinemaApp.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<User>()
+                .HasMany(u => u.Tickets)
+                .WithOne(t => t.User)
+                .HasForeignKey(t => t.UserId)
+                .OnDelete(DeleteBehavior.Restrict);
+
 
             modelBuilder.Entity<Cinema>() //check later
                 .HasMany(c => c.CinemaHalls)
@@ -27,11 +33,11 @@ namespace CinemaApp.Data
                 .HasForeignKey(ch => ch.CinemaId)
                 .OnDelete(DeleteBehavior.SetNull);
 
-            modelBuilder.Entity<Ticket>()
-                .HasOne(t => t.User)
-                .WithMany(u => u.Tickets)
-                .HasForeignKey(t => t.UserId)
-                .OnDelete(DeleteBehavior.Restrict);
+            //modelBuilder.Entity<Ticket>()
+            //    .HasOne(t => t.User)
+            //    .WithMany(u => u.Tickets)
+            //    .HasForeignKey(t => t.UserId)
+            //    .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<Ticket>()
                 .HasOne(t => t.Seat)

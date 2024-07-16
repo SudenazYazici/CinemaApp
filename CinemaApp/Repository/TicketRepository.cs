@@ -25,7 +25,7 @@ namespace CinemaApp.Repository
 
         public bool CreateTicket(Ticket ticket)
         {
-            _context.Add(ticket);
+            _context.Tickets.Add(ticket);
             return Save();
         }
 
