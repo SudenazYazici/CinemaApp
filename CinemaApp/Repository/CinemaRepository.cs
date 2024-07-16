@@ -51,5 +51,10 @@ namespace CinemaApp.Repository
             _context.Remove(cinema);
             return Save();
         }
+
+        public ICollection<CinemaHall> GetCinemaHalls(int id)
+        {
+            return _context.CinemaHalls.Where(ch => ch.CinemaId == id).OrderBy(ch => ch.Id).ToList();
+        }
     }
 }

@@ -6,7 +6,7 @@
         public string Name { get; set; }
         public string City { get; set; }
         public string Address { get; set; }
-        public ICollection<CinemaHall> CinemaHalls { get; set; }
+        public ICollection<CinemaHall> CinemaHalls { get; set; } = new List<CinemaHall>();
         //public ICollection<Ticket> Tickets { get; set; }
         public ICollection<CinemaMovie> CinemaMovies { get; set; }
 

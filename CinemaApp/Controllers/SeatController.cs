@@ -13,11 +13,13 @@ namespace CinemaApp.Controllers
     {
         private readonly ISeatRepository _seatRepository;
         private readonly IMapper _mapper;
+        private readonly ICinemaHallRepository _cinemaHallRepository;
 
-        public SeatController(ISeatRepository seatRepository, IMapper mapper)
+        public SeatController(ISeatRepository seatRepository, IMapper mapper, ICinemaHallRepository cinemaHallRepository)
         {
             _seatRepository = seatRepository;
             _mapper = mapper;
+            _cinemaHallRepository = cinemaHallRepository;
         }
 
         [HttpGet]
@@ -74,7 +76,16 @@ namespace CinemaApp.Controllers
                 return BadRequest(ModelState);
             }
 
+            var cinemaHall = _cinemaHallRepository.GetCinemaHall(seatCreate.CinemaHallId);
+
+            if (cinemaHall == null)
+            {
+                ModelState.AddModelError("", "Cinema hall does not exist");
+                return NotFound(ModelState);
+            }
+
             var seatMap = _mapper.Map<Seat>(seatCreate);
+            cinemaHall.Seats.Add(seatMap);
             if (!_seatRepository.CreateSeat(seatMap))
             {
                 ModelState.AddModelError("", "Something went wrong while saving");

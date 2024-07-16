@@ -6,7 +6,7 @@
         public int HallNum { get; set; }
         public int? CinemaId { get; set; }
         public Cinema Cinema { get; set; }
-        public ICollection<Seat> Seats { get; set; }
+        public ICollection<Seat> Seats { get; set; } = new List<Seat>();
         //public ICollection<Ticket> Tickets { get; set; }
     }
 }

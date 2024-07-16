@@ -12,5 +12,6 @@ namespace CinemaApp.Interface
         bool UpdateCinema(Cinema cinema);
         bool DeleteCinema(Cinema cinema);
         bool Save();
+        ICollection<CinemaHall> GetCinemaHalls(int id);
     }
 }

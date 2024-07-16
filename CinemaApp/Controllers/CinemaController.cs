@@ -138,5 +138,15 @@ namespace CinemaApp.Controllers
             return NoContent();
         }
 
+        [HttpGet("{cinemaId}/cinemaHalls")]
+        public IActionResult GetCinemaHalls(int cinemaId)
+        {
+            var cinemaHalls = _cinemaRepository.GetCinemaHalls(cinemaId)
+                .Where(ch => ch.CinemaId == cinemaId)
+                .OrderBy(ch => ch.Id)
+                .ToList();
+            return Ok(cinemaHalls);
+        }
+
     }
 }
