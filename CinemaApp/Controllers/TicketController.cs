@@ -94,11 +94,11 @@ namespace CinemaApp.Controllers
             var ticketMap = _mapper.Map<Ticket>(ticketCreate);
 
             var user = _userRepository.GetUser(ticketCreate.UserId);
-            //if (user == null)
-            //{
-            //    ModelState.AddModelError("", "User does not exist");
-            //    return StatusCode(404, ModelState);
-            //}
+            if (user == null)
+            {
+                ModelState.AddModelError("", "User does not exist");
+                return StatusCode(404, ModelState);
+            }
 
             //var cinema = _cinemaRepository.GetCinema(ticketCreate.CinemaId);
             //if (cinema == null)
