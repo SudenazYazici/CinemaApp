@@ -56,5 +56,10 @@ namespace CinemaApp.Repository
         {
             return _context.CinemaHalls.Where(ch => ch.CinemaId == id).OrderBy(ch => ch.Id).ToList();
         }
+
+        //public ICollection<CinemaMovie> GetMovies(int id) // check later
+        //{
+        //    return _context.CinemaMovies.Where(ch => ch.cinemaId == id).OrderBy(ch => ch.movieId).ToList();
+        //}
     }
 }

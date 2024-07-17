@@ -9,22 +9,17 @@ namespace CinemaApp.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class CinemaController : Controller
+    public class CinemaController(
+        ICinemaRepository cinemaRepository,
+        IMapper mapper,
+        ICinemaMovieRepository cinemaMovieRepository)
+        : Controller
     {
-        private readonly ICinemaRepository _cinemaRepository;
-        private readonly IMapper _mapper;
-
-        public CinemaController(ICinemaRepository cinemaRepository, IMapper mapper)
-        {
-            _cinemaRepository = cinemaRepository;
-            _mapper = mapper;
-        }
-
         [HttpGet]
         [ProducesResponseType(200, Type = typeof(IEnumerable<Cinema>))]
         public IActionResult GetCinemas()
         {
-            var cinemas = _mapper.Map<List<CinemaDto>>(_cinemaRepository.GetCinemas());
+            var cinemas = mapper.Map<List<CinemaDto>>(cinemaRepository.GetCinemas());
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -37,11 +32,11 @@ namespace CinemaApp.Controllers
         [ProducesResponseType(400)]
         public IActionResult GetCinema(int id)
         {
-            if (!_cinemaRepository.CinemaExists(id))
+            if (!cinemaRepository.CinemaExists(id))
             {
                 return NotFound();
             }
-            var cinema = _mapper.Map<CinemaDto>(_cinemaRepository.GetCinema(id));
+            var cinema = mapper.Map<CinemaDto>(cinemaRepository.GetCinema(id));
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -60,7 +55,7 @@ namespace CinemaApp.Controllers
                 return BadRequest(ModelState);
             }
 
-            var cinema = _cinemaRepository.GetCinemas()
+            var cinema = cinemaRepository.GetCinemas()
                 .Where(c => c.Id == cinemaCreate.Id).FirstOrDefault();
 
             if (cinema != null)
@@ -74,8 +69,8 @@ namespace CinemaApp.Controllers
                 return BadRequest(ModelState);
             }
 
-            var cinemaMap = _mapper.Map<Cinema>(cinemaCreate);
-            if (!_cinemaRepository.CreateCinema(cinemaMap))
+            var cinemaMap = mapper.Map<Cinema>(cinemaCreate);
+            if (!cinemaRepository.CreateCinema(cinemaMap))
             {
                 ModelState.AddModelError("", "Something went wrong while saving");
                 return StatusCode(500, ModelState);
@@ -95,15 +90,15 @@ namespace CinemaApp.Controllers
             {
                 return BadRequest(ModelState);
             }
-            if (!_cinemaRepository.CinemaExists(id))
+            if (!cinemaRepository.CinemaExists(id))
                 return NotFound();
 
             if (!ModelState.IsValid)
                 return BadRequest();
 
-            var cinemaMap = _mapper.Map<Cinema>(cinemaUpdate);
+            var cinemaMap = mapper.Map<Cinema>(cinemaUpdate);
 
-            if (!_cinemaRepository.UpdateCinema(cinemaMap))
+            if (!cinemaRepository.UpdateCinema(cinemaMap))
             {
                 ModelState.AddModelError("", "Something went wrong updating cinema");
                 return StatusCode(500, ModelState);
@@ -118,19 +113,19 @@ namespace CinemaApp.Controllers
         [ProducesResponseType(404)]
         public IActionResult DeleteCinema(int id) {
             
-            if(!_cinemaRepository.CinemaExists(id))
+            if(!cinemaRepository.CinemaExists(id))
             {
                 return NotFound();
             }
 
-            var cinema = _cinemaRepository.GetCinema(id);
+            var cinema = cinemaRepository.GetCinema(id);
 
             if(!ModelState.IsValid)
             {
                 return BadRequest();
             }
 
-            if(!_cinemaRepository.DeleteCinema(cinema))
+            if(!cinemaRepository.DeleteCinema(cinema))
             {
                 ModelState.AddModelError("", "Something went wrong deleting cinema");
             }
@@ -141,12 +136,21 @@ namespace CinemaApp.Controllers
         [HttpGet("{cinemaId}/cinemaHalls")]
         public IActionResult GetCinemaHalls(int cinemaId)
         {
-            var cinemaHalls = _cinemaRepository.GetCinemaHalls(cinemaId)
+            var cinemaHalls = cinemaRepository.GetCinemaHalls(cinemaId)
                 .Where(ch => ch.CinemaId == cinemaId)
                 .OrderBy(ch => ch.Id)
                 .ToList();
             return Ok(cinemaHalls);
         }
+
+        [HttpGet("{cinemaId}/movies")]
+        public IActionResult GetMoviesOfCinema(int cinemaId)
+        {
+            var movies = cinemaMovieRepository.GetMoviesOfCinema(cinemaId);
+                
+            return Ok(movies);
+        }
+
 
     }
 }

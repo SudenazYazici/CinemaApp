@@ -1,6 +1,7 @@
 ﻿using CinemaApp.Data;
 using CinemaApp.Interface;
 using CinemaApp.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace CinemaApp.Repository
 {

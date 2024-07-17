@@ -2,28 +2,40 @@
 using CinemaApp.Dto;
 using CinemaApp.Interface;
 using CinemaApp.Models;
+using CinemaApp.Repository;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CinemaApp.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class MovieController : Controller
+    public class MovieController(IMovieRepository movieRepository, IMapper mapper, ICinemaMovieRepository cinemaMovieRepository)
+        : Controller
     {
-        private readonly IMovieRepository _movieRepository;
-        private readonly IMapper _mapper;
+        //private readonly ICinemaRepository _cinemaRepository = cinemaRepository;
 
-        public MovieController(IMovieRepository movieRepository, IMapper mapper)
-        {
-            _movieRepository = movieRepository;
-            _mapper = mapper;
-        }
+        //[HttpGet]
+        //[ProducesResponseType(200, Type = typeof(IEnumerable<Movie>))]
+        //public IActionResult GetMovies()
+        //{
+        //    var movies = movieRepository.GetMovies();
+        //    var cinemaMovies = cinemaRepository.GetCinemaHalls();
+
+        //    var movieList = movies.Select(movie => new MovieDto
+        //        { CinemaId = cinemaMovies.First(cinemaMovie => cinemaMovie.MovieId == movie.Id).CinemaId, Details = movie.Details, Id = movie.Id, Name = movie.Name}).ToList();
+        //    if (!ModelState.IsValid)
+        //    {
+        //        return BadRequest(ModelState);
+        //    }
+        //    return Ok(movies);
+        //}
 
         [HttpGet]
         [ProducesResponseType(200, Type = typeof(IEnumerable<Movie>))]
         public IActionResult GetMovies()
         {
-            var movies = _mapper.Map<List<MovieDto>>(_movieRepository.GetMovies());
+            var movies = mapper.Map<List<MovieDto>>(movieRepository.GetMovies());
+
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -36,7 +48,7 @@ namespace CinemaApp.Controllers
         [ProducesResponseType(400)]
         public IActionResult GetMovie(string name)
         {
-            var movie = _mapper.Map<MovieDto>(_movieRepository.GetMovie(name));
+            var movie = mapper.Map<MovieDto>(movieRepository.GetMovie(name));
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -50,11 +62,11 @@ namespace CinemaApp.Controllers
         [ProducesResponseType(400)]
         public IActionResult GetMovie(int id)
         {
-            if (!_movieRepository.MovieExists(id))
+            if (!movieRepository.MovieExists(id))
             {
                 return NotFound();
             }
-            var movie = _mapper.Map<MovieDto>(_movieRepository.GetMovie(id));
+            var movie = mapper.Map<MovieDto>(movieRepository.GetMovie(id));
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -73,7 +85,7 @@ namespace CinemaApp.Controllers
                 return BadRequest(ModelState);
             }
 
-            var movie = _movieRepository.GetMovies()
+            var movie = movieRepository.GetMovies()
                 .Where(m => m.Id == movieCreate.Id).FirstOrDefault();
 
             if (movie != null)
@@ -87,8 +99,22 @@ namespace CinemaApp.Controllers
                 return BadRequest(ModelState);
             }
 
-            var movieMap = _mapper.Map<Movie>(movieCreate);
-            if (!_movieRepository.CreateMovie(movieMap))
+            //var cinema = _cinemaRepository.GetCinema(movieCreate.CinemaId);
+
+            //if (cinema == null)
+            //{
+            //    ModelState.AddModelError("", "Cinema does not exist");
+            //    return NotFound(ModelState);
+            //}
+
+            var movieMap = mapper.Map<Movie>(movieCreate);
+            //var cinemaMovie = new CinemaMovie
+            //{
+            //    cinema = cinema,
+            //    movie = movieMap
+            //};
+            //cinema.CinemaMovies.Add(cinemaMovie);
+            if (!movieRepository.CreateMovie(movieMap))
             {
                 ModelState.AddModelError("", "Something went wrong while saving");
                 return StatusCode(500, ModelState);
@@ -108,15 +134,15 @@ namespace CinemaApp.Controllers
             {
                 return BadRequest(ModelState);
             }
-            if (!_movieRepository.MovieExists(id))
+            if (!movieRepository.MovieExists(id))
                 return NotFound();
 
             if (!ModelState.IsValid)
                 return BadRequest();
 
-            var movieMap = _mapper.Map<Movie>(movieUpdate);
+            var movieMap = mapper.Map<Movie>(movieUpdate);
 
-            if (!_movieRepository.UpdateMovie(movieMap))
+            if (!movieRepository.UpdateMovie(movieMap))
             {
                 ModelState.AddModelError("", "Something went wrong updating movie");
                 return StatusCode(500, ModelState);
@@ -132,24 +158,31 @@ namespace CinemaApp.Controllers
         public IActionResult DeleteMovie(int id)
         {
 
-            if (!_movieRepository.MovieExists(id))
+            if (!movieRepository.MovieExists(id))
             {
                 return NotFound();
             }
 
-            var movie = _movieRepository.GetMovie(id);
+            var movie = movieRepository.GetMovie(id);
 
             if (!ModelState.IsValid)
             {
                 return BadRequest();
             }
 
-            if (!_movieRepository.DeleteMovie(movie))
+            if (!movieRepository.DeleteMovie(movie))
             {
                 ModelState.AddModelError("", "Something went wrong deleting movie");
             }
 
             return NoContent();
+        }
+
+        [HttpGet("{movieId}/cinemas")]
+        public IActionResult GetCinemasOfMovie(int movieId)
+        {
+            var cinemas = cinemaMovieRepository.GetCinemasOfMovie(movieId);
+            return Ok(cinemas);
         }
     }
 }
