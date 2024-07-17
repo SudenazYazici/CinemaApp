@@ -7,6 +7,6 @@ namespace CinemaApp.Dto
         public int Id { get; set; }
         public int HallNum { get; set; }
         public int CinemaId { get; set; }
-        public Cinema Cinema { get; set; }
+        //public Cinema Cinema { get; set; }
     }
 }
