@@ -6,6 +6,7 @@ namespace CinemaApp.Interface
     {
         List<Cinema> GetCinemasOfMovie(int movieId);
         List<Movie> GetMoviesOfCinema(int cinemaId);
+        void AddCinemaMovie(int movieId, int cinemaId);
 
     }
 }

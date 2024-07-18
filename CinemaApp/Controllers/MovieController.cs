@@ -184,5 +184,12 @@ namespace CinemaApp.Controllers
             var cinemas = cinemaMovieRepository.GetCinemasOfMovie(movieId);
             return Ok(cinemas);
         }
+
+        [HttpPost("{movieId}/post-cinema/{cinemaId}")]
+        public IActionResult AddCinemaMovie(int movieId, int cinemaId)
+        {
+            cinemaMovieRepository.AddCinemaMovie(movieId, cinemaId);
+            return NoContent();
+        }
     }
 }

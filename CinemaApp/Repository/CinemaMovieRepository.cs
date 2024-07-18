@@ -31,5 +31,22 @@ namespace CinemaApp.Repository
 
             return movies;
         }
+
+        public void AddCinemaMovie(int movieId, int cinemaId)
+        {
+            var cinema = _context.Cinemas.Include(c => c.CinemaMovies).FirstOrDefault(c => c.Id == cinemaId);
+            var movie = _context.Movies.Include(c => c.CinemaMovies).FirstOrDefault(m => m.Id == movieId);
+            var cinemaMovie = new CinemaMovie
+            {
+                cinemaId = cinemaId,
+                cinema = cinema,
+                movieId = movieId,
+                movie = movie
+            };
+            cinema.CinemaMovies.Add(cinemaMovie);
+            movie.CinemaMovies.Add(cinemaMovie);
+
+            _context.SaveChanges();
+        }
     }
 }
