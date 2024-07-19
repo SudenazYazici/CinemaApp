@@ -15,6 +15,7 @@ namespace CinemaApp.Models
         //public string ConfirmPassword { get; set; }
         public DateTime BirthDate { get; set; }
         public ICollection<Ticket> Tickets { get; set; } = [];
+        public string Role { get; set; }
 
     }
 }

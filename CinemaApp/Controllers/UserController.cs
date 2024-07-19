@@ -179,6 +179,7 @@ namespace CinemaApp.Controllers
                 Email = request.Email,
                 Password = passwordHash,
                 BirthDate = request.BirthDate,
+                Role = request.Role ?? "user"
             };
             
             //user.ConfirmPassword = confirmPasswordHash;
@@ -236,6 +237,7 @@ namespace CinemaApp.Controllers
             loggedInUser.Name = user.Name;
             loggedInUser.Email = user.Email;
             loggedInUser.BirthDate = user.BirthDate;
+            loggedInUser.Role = user.Role;
             loggedInUser.Token = token;
 
             return Ok(loggedInUser);

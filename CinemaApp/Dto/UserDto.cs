@@ -13,5 +13,6 @@ namespace CinemaApp.Dto
         public string Password { get; set; }
         //public string ConfirmPassword { get; set; }
         public DateTime BirthDate { get; set; }
+        public string Role { get; set; }
     }
 }
