@@ -185,7 +185,7 @@ namespace CinemaApp.Controllers
             return Ok(cinemas);
         }
 
-        [HttpPost("{movieId}/post-cinema/{cinemaId}")]
+        [HttpPost("{movieId}/post-to-cinema/{cinemaId}")]
         public IActionResult AddCinemaMovie(int movieId, int cinemaId)
         {
             cinemaMovieRepository.AddCinemaMovie(movieId, cinemaId);
