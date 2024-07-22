@@ -48,5 +48,16 @@ namespace CinemaApp.Repository
 
             _context.SaveChanges();
         }
+
+        public void RemoveCinemaMovie(int movieId, int cinemaId)
+        {
+            var cinema = _context.Cinemas.Include(c => c.CinemaMovies).FirstOrDefault(c => c.Id == cinemaId);
+            var movie = _context.Movies.Include(c => c.CinemaMovies).FirstOrDefault(m => m.Id == movieId);
+            var cinemaMovie = _context.CinemaMovies.FirstOrDefault(cm => cm.movieId == movieId && cm.cinemaId == cinemaId);
+            cinema.CinemaMovies.Remove(cinemaMovie);
+            movie.CinemaMovies.Remove(cinemaMovie);
+
+            _context.SaveChanges();
+        }
     }
 }

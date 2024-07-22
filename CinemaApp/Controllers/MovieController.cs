@@ -191,5 +191,12 @@ namespace CinemaApp.Controllers
             cinemaMovieRepository.AddCinemaMovie(movieId, cinemaId);
             return NoContent();
         }
+
+        [HttpDelete("{movieId}/delete-from-cinema/{cinemaId}")]
+        public IActionResult RemoveCinemaMovie(int movieId, int cinemaId)
+        {
+            cinemaMovieRepository.RemoveCinemaMovie(movieId, cinemaId);
+            return NoContent();
+        }
     }
 }
