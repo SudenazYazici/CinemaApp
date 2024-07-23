@@ -60,5 +60,16 @@ namespace CinemaApp.Repository
 
             return sessions;
         }
+
+        public ICollection<CinemaHall> GetCinemaHallsOfMovie(int movieId)
+        {
+            var cinemaHalls = _context.Sessions
+                .Where(s => s.MovieId == movieId)
+                .Select(s => s.CinemaHall)
+                .Distinct()
+                .ToList();
+
+            return cinemaHalls;
+        }
     }
 }

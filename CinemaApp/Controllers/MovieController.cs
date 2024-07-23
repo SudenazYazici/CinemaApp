@@ -205,5 +205,12 @@ namespace CinemaApp.Controllers
             var sessions = sessionRepository.GetSessionsOfMovie(movieId);
             return Ok(sessions);
         }
+
+        [HttpGet("{movieId}/cinemaHalls")]
+        public IActionResult GetCinemaHallsOfMovie(int movieId)
+        {
+            var cinemaHalls = sessionRepository.GetCinemaHallsOfMovie(movieId);
+            return Ok(cinemaHalls);
+        }
     }
 }

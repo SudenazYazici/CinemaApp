@@ -13,5 +13,6 @@ namespace CinemaApp.Interface
         bool DeleteSession(Session session);
         bool Save();
         ICollection<Session> GetSessionsOfMovie(int movieId);
+        ICollection<CinemaHall> GetCinemaHallsOfMovie(int movieId);
     }
 }
