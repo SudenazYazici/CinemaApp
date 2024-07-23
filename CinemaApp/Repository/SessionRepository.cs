@@ -51,5 +51,14 @@ namespace CinemaApp.Repository
             _context.Update(session);
             return Save();
         }
+
+        public ICollection<Session> GetSessionsOfMovie(int movieId)
+        {
+            var sessions = _context.Sessions
+                .Where(s => s.MovieId == movieId)
+                .ToList();
+
+            return sessions;
+        }
     }
 }

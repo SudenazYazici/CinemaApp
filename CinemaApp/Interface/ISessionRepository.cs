@@ -12,6 +12,6 @@ namespace CinemaApp.Interface
         bool UpdateSession(Session session);
         bool DeleteSession(Session session);
         bool Save();
-
+        ICollection<Session> GetSessionsOfMovie(int movieId);
     }
 }

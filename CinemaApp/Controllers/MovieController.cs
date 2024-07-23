@@ -9,7 +9,7 @@ namespace CinemaApp.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class MovieController(IMovieRepository movieRepository, IMapper mapper, ICinemaMovieRepository cinemaMovieRepository)
+    public class MovieController(IMovieRepository movieRepository, IMapper mapper, ICinemaMovieRepository cinemaMovieRepository, ISessionRepository sessionRepository)
         : Controller
     {
         //private readonly ICinemaRepository _cinemaRepository = cinemaRepository;
@@ -197,6 +197,13 @@ namespace CinemaApp.Controllers
         {
             cinemaMovieRepository.RemoveCinemaMovie(movieId, cinemaId);
             return NoContent();
+        }
+
+        [HttpGet("{movieId}/sessions")]
+        public IActionResult GetSessionsOfMovie(int movieId)
+        {
+            var sessions = sessionRepository.GetSessionsOfMovie(movieId);
+            return Ok(sessions);
         }
     }
 }
