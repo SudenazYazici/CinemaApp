@@ -159,5 +159,12 @@ namespace CinemaApp.Controllers
 
             return NoContent();
         }
+
+        [HttpGet("get-start-time/{movieId}/{cinemaHallId}")]
+        public IActionResult GetSessionsStartTime(int movieId, int cinemaHallId)
+        {
+            var starts = _sessionRepository.GetSessionsStartTime(movieId, cinemaHallId);
+            return Ok(starts);
+        }
     }
 }
