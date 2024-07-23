@@ -17,6 +17,7 @@ namespace CinemaApp.Data
         public DbSet<User> Users { get; set; }
         public DbSet<Movie> Movies { get; set; }
         public DbSet<CinemaMovie> CinemaMovies { get; set; }
+        public DbSet<Session> Sessions { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -77,6 +78,16 @@ namespace CinemaApp.Data
                     .WithMany(cm => cm.CinemaMovies)
                     .HasForeignKey(m => m.movieId)
                     .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Session>()
+                .HasOne(s => s.CinemaHall)
+                .WithMany(ch => ch.Sessions)
+                .HasForeignKey(s => s.CinemaHallId);
+
+            modelBuilder.Entity<Session>()
+                .HasOne(s => s.Movie)
+                .WithMany(m => m.Sessions)
+                .HasForeignKey(s => s.MovieId);
         }
     }
 }

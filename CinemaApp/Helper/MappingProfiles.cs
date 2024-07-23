@@ -19,7 +19,9 @@ namespace CinemaApp.Helper
             CreateMap<UserDto, User>();
             CreateMap<Movie, MovieDto>();
             CreateMap<MovieDto, Movie>();
+            CreateMap<SessionDto, Session>();
+            CreateMap<Session, SessionDto>();
         }
-        
+
     }
 }
