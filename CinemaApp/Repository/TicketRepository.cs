@@ -1,6 +1,7 @@
 ﻿using CinemaApp.Data;
 using CinemaApp.Interface;
 using CinemaApp.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace CinemaApp.Repository
 {
@@ -44,6 +45,21 @@ namespace CinemaApp.Repository
         public bool DeleteTicket(Ticket ticket) {
             _context.Remove(ticket);
             return Save();
+        }
+
+        public IEnumerable<int> GetUnavailableSeatIds(int movieId, int cinemaHallId)
+        {
+            var tickets = _context.Tickets
+                .Include(t => t.Session)
+                .ToList();
+
+            var unavailableSeats = tickets
+                .Where(t => t.Session.MovieId == movieId && t.Session.CinemaHallId == cinemaHallId)
+                .Select(t => t.SeatId)
+                .Distinct()
+                .ToList();
+
+            return unavailableSeats;
         }
     }
 }

@@ -12,5 +12,6 @@ namespace CinemaApp.Interface
         bool UpdateTicket(Ticket ticket);
         bool DeleteTicket(Ticket ticket);
         bool Save();
+        IEnumerable<int> GetUnavailableSeatIds(int movieId, int cinemaHallId);
     }
 }

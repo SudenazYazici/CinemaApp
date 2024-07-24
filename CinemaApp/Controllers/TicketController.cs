@@ -191,5 +191,17 @@ namespace CinemaApp.Controllers
             return NoContent();
 
         }
+
+        [HttpGet("get-unavailable-seat-ids/{movieId}/{cinemaHallId}")]
+        public IActionResult GetUnavailableSeatIds(int movieId, int cinemaHallId)
+        {
+            var seatIds = _ticketRepository.GetUnavailableSeatIds(movieId, cinemaHallId);
+            if (seatIds == null || !seatIds.Any())
+            {
+                return NotFound();
+            }
+
+            return Ok(seatIds);
+        }
     }
 }

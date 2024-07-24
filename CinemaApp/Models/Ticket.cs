@@ -17,7 +17,5 @@
         public DateTime Date { get; set; }
         public int Price { get; set; }
 
-        //migration ekle
-
     }
 }
