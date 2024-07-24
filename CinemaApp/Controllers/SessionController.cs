@@ -178,5 +178,16 @@ namespace CinemaApp.Controllers
         //    var starts = _sessionRepository.GetSessionsStartTime(movieId, cinemaHallId);
         //    return Ok(starts);
         //}
+
+        [HttpGet("get-session/{movieId}/{cinemaHallId}/{startTime}")]
+        public IActionResult GetSession(int movieId, int cinemaHallId, DateTime startTime)
+        {
+            var session = _sessionRepository.GetSession(movieId, cinemaHallId, startTime);
+            if (session == null)
+            {
+                return NotFound();
+            }
+            return Ok(session);
+        }
     }
 }
