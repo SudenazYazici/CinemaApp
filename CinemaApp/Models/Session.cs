@@ -10,6 +10,7 @@
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
         public int DurationInMinutes { get; set; }
+        public ICollection<Ticket> Tickets { get; set; } = new List<Ticket>();
 
     }
 }

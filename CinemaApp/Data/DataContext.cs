@@ -40,12 +40,6 @@ namespace CinemaApp.Data
             //    .HasForeignKey(t => t.UserId)
             //    .OnDelete(DeleteBehavior.Restrict);
 
-            modelBuilder.Entity<Ticket>()
-                .HasOne(t => t.Seat)
-                .WithOne(s => s.Ticket)
-                .HasForeignKey<Ticket>(t => t.SeatId) // one to one
-                .OnDelete(DeleteBehavior.Restrict);
-
             modelBuilder.Entity<CinemaHall>()
                 .HasOne(ch => ch.Cinema)
                 .WithMany(c => c.CinemaHalls)
@@ -57,12 +51,6 @@ namespace CinemaApp.Data
                 .WithMany(ch => ch.Seats)
                 .HasForeignKey(s => s.CinemaHallId)
                 .OnDelete(DeleteBehavior.SetNull);
-
-            modelBuilder.Entity<Seat>()
-                .HasOne(s => s.Ticket)
-                .WithOne(t => t.Seat)
-                .HasForeignKey<Ticket>(t => t.SeatId)
-                .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<CinemaMovie>()
                     .HasKey(cm => new { cm.cinemaId, cm.movieId });
@@ -88,6 +76,11 @@ namespace CinemaApp.Data
                 .HasOne(s => s.Movie)
                 .WithMany(m => m.Sessions)
                 .HasForeignKey(s => s.MovieId);
+
+            modelBuilder.Entity<Ticket>()
+                .HasOne(t => t.Session)
+                .WithMany(s => s.Tickets)
+                .HasForeignKey(t => t.SessionId);
         }
     }
 }

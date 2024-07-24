@@ -30,6 +30,18 @@ namespace CinemaApp.Repository
             return _context.Sessions.Where(p => p.Id == id).FirstOrDefault();
         }
 
+        public ICollection<Session> GetSessions(int movieId, int cinemaHallId)
+        {
+            return _context.Sessions
+                .Where(p => p.MovieId == movieId && p.CinemaHallId == cinemaHallId).ToList();
+        }
+
+        public Session GetSession(int movieId, int cinemaHallId, DateTime startTime)
+        {
+            return _context.Sessions
+                .Where(p => p.MovieId == movieId && p.CinemaHallId == cinemaHallId && p.StartDate == startTime).FirstOrDefault();
+        }
+
         public ICollection<DateTime> GetSessionsStartTime(int movieId, int cinemaHallId)
         {
             var times = _context.Sessions.Where(p => p.MovieId == movieId && p.CinemaHallId == cinemaHallId)

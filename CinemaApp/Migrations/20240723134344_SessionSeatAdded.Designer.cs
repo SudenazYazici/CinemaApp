@@ -4,6 +4,7 @@ using CinemaApp.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CinemaApp.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20240723134344_SessionSeatAdded")]
+    partial class SessionSeatAdded
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -162,6 +165,21 @@ namespace CinemaApp.Migrations
                     b.ToTable("Sessions");
                 });
 
+            modelBuilder.Entity("CinemaApp.Models.SessionSeat", b =>
+                {
+                    b.Property<int>("sessionId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("seatId")
+                        .HasColumnType("int");
+
+                    b.HasKey("sessionId", "seatId");
+
+                    b.HasIndex("seatId");
+
+                    b.ToTable("SessionSeats");
+                });
+
             modelBuilder.Entity("CinemaApp.Models.Ticket", b =>
                 {
                     b.Property<int>("Id")
@@ -189,18 +207,17 @@ namespace CinemaApp.Migrations
                     b.Property<int>("SeatId")
                         .HasColumnType("int");
 
-                    b.Property<int>("SessionId")
-                        .HasColumnType("int");
-
                     b.Property<int>("UserId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CinemaHallId");
+
+                    b.HasIndex("CinemaId");
+
                     b.HasIndex("SeatId")
                         .IsUnique();
-
-                    b.HasIndex("SessionId");
 
                     b.HasIndex("UserId");
 
@@ -298,17 +315,42 @@ namespace CinemaApp.Migrations
                     b.Navigation("Movie");
                 });
 
-            modelBuilder.Entity("CinemaApp.Models.Ticket", b =>
+            modelBuilder.Entity("CinemaApp.Models.SessionSeat", b =>
                 {
-                    b.HasOne("CinemaApp.Models.Seat", null)
-                        .WithOne("Ticket")
-                        .HasForeignKey("CinemaApp.Models.Ticket", "SeatId")
+                    b.HasOne("CinemaApp.Models.Seat", "seat")
+                        .WithMany("SessionSeats")
+                        .HasForeignKey("seatId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("CinemaApp.Models.Session", "Session")
-                        .WithMany("Tickets")
-                        .HasForeignKey("SessionId")
+                    b.HasOne("CinemaApp.Models.Session", "session")
+                        .WithMany("SessionSeats")
+                        .HasForeignKey("sessionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("seat");
+
+                    b.Navigation("session");
+                });
+
+            modelBuilder.Entity("CinemaApp.Models.Ticket", b =>
+                {
+                    b.HasOne("CinemaApp.Models.CinemaHall", "CinemaHall")
+                        .WithMany()
+                        .HasForeignKey("CinemaHallId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("CinemaApp.Models.Cinema", "Cinema")
+                        .WithMany()
+                        .HasForeignKey("CinemaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("CinemaApp.Models.Seat", "Seat")
+                        .WithOne("Ticket")
+                        .HasForeignKey("CinemaApp.Models.Ticket", "SeatId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -318,7 +360,11 @@ namespace CinemaApp.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("Session");
+                    b.Navigation("Cinema");
+
+                    b.Navigation("CinemaHall");
+
+                    b.Navigation("Seat");
 
                     b.Navigation("User");
                 });
@@ -346,12 +392,14 @@ namespace CinemaApp.Migrations
 
             modelBuilder.Entity("CinemaApp.Models.Seat", b =>
                 {
+                    b.Navigation("SessionSeats");
+
                     b.Navigation("Ticket");
                 });
 
             modelBuilder.Entity("CinemaApp.Models.Session", b =>
                 {
-                    b.Navigation("Tickets");
+                    b.Navigation("SessionSeats");
                 });
 
             modelBuilder.Entity("CinemaApp.Models.User", b =>

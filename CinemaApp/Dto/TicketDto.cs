@@ -14,6 +14,7 @@ namespace CinemaApp.Dto
         //public CinemaHall CinemaHall { get; set; }
         public int SeatId { get; set; }
         //public Seat Seat { get; set; }
+        public int SessionId { get; set; }
         public DateTime Date { get; set; }
         public int Price { get; set; }
     }
