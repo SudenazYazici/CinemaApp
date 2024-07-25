@@ -17,6 +17,7 @@ namespace CinemaApp.Controllers
         private readonly ICinemaHallRepository _cinemaHallRepository;
         private readonly ISeatRepository _seatRepository;
         private readonly IMovieRepository _movieRepository;
+        private readonly ISessionRepository _sessionRepository;
         private readonly IMapper _mapper;
 
         public TicketController(
@@ -26,6 +27,7 @@ namespace CinemaApp.Controllers
             ICinemaHallRepository cinemaHallRepository,
             ISeatRepository seatRepository,
             IMovieRepository movieRepository,
+            ISessionRepository sessionRepository,
             IMapper mapper)
         {
             _ticketRepository = ticketRepository;
@@ -34,6 +36,7 @@ namespace CinemaApp.Controllers
             _cinemaHallRepository = cinemaHallRepository;
             _seatRepository = seatRepository;
             _movieRepository = movieRepository;
+            _sessionRepository = sessionRepository;
             _mapper = mapper;
         }
 
@@ -128,6 +131,13 @@ namespace CinemaApp.Controllers
                 return StatusCode(404, ModelState);
             }
 
+            var session = _sessionRepository.GetSession(ticketCreate.SessionId);
+            if (session == null)
+            {
+                ModelState.AddModelError("", "Session does not exist");
+                return StatusCode(404, ModelState);
+            }
+
             //ticketMap.User = user;
             //ticketMap.Cinema = cinema;
             //ticketMap.CinemaHall = cinemaHall;
@@ -192,13 +202,13 @@ namespace CinemaApp.Controllers
 
         }
 
-        [HttpGet("get-unavailable-seat-ids/{movieId}/{cinemaHallId}")]
-        public IActionResult GetUnavailableSeatIds(int movieId, int cinemaHallId)
+        [HttpGet("get-unavailable-seat-ids/{movieId}/{cinemaHallId}/{startTime}")]
+        public IActionResult GetUnavailableSeatIds(int movieId, int cinemaHallId, DateTime startTime)
         {
-            var seatIds = _ticketRepository.GetUnavailableSeatIds(movieId, cinemaHallId);
+            var seatIds = _ticketRepository.GetUnavailableSeatIds(movieId, cinemaHallId, startTime);
             if (seatIds == null || !seatIds.Any())
             {
-                return NotFound();
+                return Ok(new List<int>());
             }
 
             return Ok(seatIds);

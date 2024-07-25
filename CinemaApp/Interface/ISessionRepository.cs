@@ -17,6 +17,6 @@ namespace CinemaApp.Interface
         bool Save();
         ICollection<Session> GetSessionsOfMovie(int movieId);
         ICollection<CinemaHall> GetCinemaHallsOfMovie(int movieId);
-        ICollection<DateTime> GetSessionsStartTime(int movieId, int cinemaHallId);
+        //ICollection<DateTime> GetSessionsStartTime(int movieId, int cinemaHallId);
     }
 }
