@@ -144,12 +144,16 @@ namespace CinemaApp.Controllers
             //ticketMap.Seat = seat;
             //ticketMap.MovieName = movie.Name;  
             user.Tickets.Add(ticketMap);
+            seat.Tickets.Add(ticketMap);
 
             if (!_ticketRepository.CreateTicket(ticketMap))
             {
                 ModelState.AddModelError("", "Something went wrong while saving");
                 return StatusCode(500, ModelState);
             }
+
+            _seatRepository.UpdateSeat(seat);
+            _userRepository.UpdateUser(user);
 
             return Ok("Successfully created");
 

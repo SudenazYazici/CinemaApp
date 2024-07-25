@@ -11,7 +11,7 @@
         public int CinemaHallId { get; set; }
         //public CinemaHall CinemaHall { get; set; }
         public int SeatId { get; set; }
-        //public Seat Seat { get; set; }
+        public Seat Seat { get; set; }
         public int SessionId { get; set; }
         public Session Session { get; set; }
         public DateTime Date { get; set; }
