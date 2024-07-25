@@ -143,6 +143,7 @@ namespace CinemaApp.Controllers
             //ticketMap.CinemaHall = cinemaHall;
             //ticketMap.Seat = seat;
             //ticketMap.MovieName = movie.Name;  
+            seat.Tickets ??= new List<Ticket>();
             user.Tickets.Add(ticketMap);
             seat.Tickets.Add(ticketMap);
 
