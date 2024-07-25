@@ -33,9 +33,9 @@ namespace CinemaApp.Repository
         {
             return _context.Users.Any(p => p.Id == id);
         }
-        public bool UserExists(string name)
+        public bool UserExists(string email)
         {
-            return _context.Users.Any(p => p.Name == name);
+            return _context.Users.Any(p => p.Email == email);
         }
         public ICollection<Ticket> GetTicketsByUser(int id)
         {

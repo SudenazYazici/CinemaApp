@@ -10,7 +10,7 @@ namespace CinemaApp.Interface
         User GetUserByEmail(string email);
 
         bool UserExists(int id);
-        bool UserExists(string id);
+        bool UserExists(string email);
         ICollection<Ticket> GetTicketsByUser(int id);
         bool CreateUser(User user);
         bool UpdateUser(User user);

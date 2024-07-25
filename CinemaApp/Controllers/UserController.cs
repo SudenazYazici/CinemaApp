@@ -165,7 +165,7 @@ namespace CinemaApp.Controllers
                 return BadRequest();
             }
      
-            if (_userRepository.UserExists(request.Name))
+            if (_userRepository.UserExists(request.Email))
             {
                 return BadRequest("This user has already registered.");
             }

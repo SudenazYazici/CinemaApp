@@ -42,15 +42,15 @@ namespace CinemaApp.Repository
                 .Where(p => p.CinemaId == cinemaId && p.MovieId == movieId && p.CinemaHallId == cinemaHallId && p.StartDate == startTime).FirstOrDefault();
         }
 
-        public ICollection<DateTime> GetSessionsStartTime(int movieId, int cinemaHallId)
-        {
-            var times = _context.Sessions.Where(p => p.MovieId == movieId && p.CinemaHallId == cinemaHallId)
-                .Select(s => s.StartDate)
-                .Distinct()
-                .ToList();
+        //public ICollection<DateTime> GetSessionsStartTime(int movieId, int cinemaHallId)
+        //{
+        //    var times = _context.Sessions.Where(p => p.MovieId == movieId && p.CinemaHallId == cinemaHallId)
+        //        .Select(s => s.StartDate)
+        //        .Distinct()
+        //        .ToList();
 
-            return times;
-        }
+        //    return times;
+        //}
 
         public ICollection<Session> GetSessions()
         {
