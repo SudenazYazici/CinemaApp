@@ -78,14 +78,22 @@ namespace CinemaApp.Data
                     .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<Session>()
+                .HasOne(s => s.Cinema)
+                .WithMany(c => c.Sessions)
+                .HasForeignKey(s => s.CinemaId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Session>()
                 .HasOne(s => s.CinemaHall)
                 .WithMany(ch => ch.Sessions)
-                .HasForeignKey(s => s.CinemaHallId);
+                .HasForeignKey(s => s.CinemaHallId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Session>()
                 .HasOne(s => s.Movie)
                 .WithMany(m => m.Sessions)
-                .HasForeignKey(s => s.MovieId);
+                .HasForeignKey(s => s.MovieId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Ticket>()
                 .HasOne(t => t.Session)

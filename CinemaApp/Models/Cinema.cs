@@ -14,6 +14,7 @@ namespace CinemaApp.Models
         public ICollection<CinemaHall> CinemaHalls { get; set; } = new List<CinemaHall>();
         //public ICollection<Ticket> Tickets { get; set; }
         public ICollection<CinemaMovie> CinemaMovies { get; set; } = [];
+        public ICollection<Session> Sessions { get; set; } = [];
 
     }
 }

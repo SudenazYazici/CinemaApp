@@ -15,13 +15,15 @@ namespace CinemaApp.Controllers
         private readonly IMapper _mapper;
         private readonly IMovieRepository _movieRepository;
         private readonly ICinemaHallRepository _cinemaHallRepository;
+        private readonly ICinemaRepository _cinemaRepository;
 
-        public SessionController(ISessionRepository sessionRepository, IMapper mapper, IMovieRepository movieRepository, ICinemaHallRepository cinemaHallRepository)
+        public SessionController(ISessionRepository sessionRepository, IMapper mapper, IMovieRepository movieRepository, ICinemaHallRepository cinemaHallRepository, ICinemaRepository cinemaRepository)
         {
             _sessionRepository = sessionRepository;
             _mapper = mapper;
             _movieRepository = movieRepository;
             _cinemaHallRepository = cinemaHallRepository;
+            _cinemaRepository = cinemaRepository;
         }
 
         [HttpGet]
@@ -54,10 +56,10 @@ namespace CinemaApp.Controllers
             return Ok(session);
         }
 
-        [HttpGet("get-sessions/{movieId}/{cinemaHallId}")]
-        public IActionResult GetSessions(int movieId, int cinemaHallId)
+        [HttpGet("get-sessions/{cinemaId}/{movieId}/{cinemaHallId}")]
+        public IActionResult GetSessions(int cinemaId, int movieId, int cinemaHallId)
         {
-            var sessions = _sessionRepository.GetSessions(movieId, cinemaHallId);
+            var sessions = _sessionRepository.GetSessions(cinemaId, movieId, cinemaHallId);
             if (sessions == null || !sessions.Any())
             {
                 return NotFound();
@@ -90,6 +92,14 @@ namespace CinemaApp.Controllers
                 return BadRequest(ModelState);
             }
 
+            var cinema = _cinemaRepository.GetCinema(sessionCreate.CinemaId);
+
+            if (cinema == null)
+            {
+                ModelState.AddModelError("", "Cinema does not exist");
+                return NotFound(ModelState);
+            }
+
             var movie = _movieRepository.GetMovie(sessionCreate.MovieId);
 
             if (movie == null)
@@ -106,6 +116,7 @@ namespace CinemaApp.Controllers
             }
 
             var sessionMap = _mapper.Map<Session>(sessionCreate);
+            cinema.Sessions.Add(sessionMap);
             movie.Sessions.Add(sessionMap);
             cinemaHall.Sessions.Add(sessionMap);
             if (!_sessionRepository.CreateSession(sessionMap))
@@ -179,10 +190,10 @@ namespace CinemaApp.Controllers
         //    return Ok(starts);
         //}
 
-        [HttpGet("get-session/{movieId}/{cinemaHallId}/{startTime}")]
-        public IActionResult GetSession(int movieId, int cinemaHallId, DateTime startTime)
+        [HttpGet("get-session/{cinemaId}/{movieId}/{cinemaHallId}/{startTime}")]
+        public IActionResult GetSession(int cinemaId, int movieId, int cinemaHallId, DateTime startTime)
         {
-            var session = _sessionRepository.GetSession(movieId, cinemaHallId, startTime);
+            var session = _sessionRepository.GetSession(cinemaId, movieId, cinemaHallId, startTime);
             if (session == null)
             {
                 return NotFound();

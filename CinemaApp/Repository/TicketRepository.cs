@@ -47,14 +47,14 @@ namespace CinemaApp.Repository
             return Save();
         }
 
-        public IEnumerable<int> GetUnavailableSeatIds(int movieId, int cinemaHallId, DateTime startTime)
+        public IEnumerable<int> GetUnavailableSeatIds(int cinemaId, int movieId, int cinemaHallId, DateTime startTime)
         {
             var tickets = _context.Tickets
                 .Include(t => t.Session)
                 .ToList();
 
             var unavailableSeats = tickets
-                .Where(t => t.Session.MovieId == movieId && t.Session.CinemaHallId == cinemaHallId && t.Session.StartDate == startTime)
+                .Where(t => t.Session.CinemaId == cinemaId &&  t.Session.MovieId == movieId && t.Session.CinemaHallId == cinemaHallId && t.Session.StartDate == startTime)
                 .Select(t => t.SeatId)
                 .Distinct()
                 .ToList();

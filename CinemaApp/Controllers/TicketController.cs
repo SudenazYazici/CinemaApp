@@ -207,10 +207,10 @@ namespace CinemaApp.Controllers
 
         }
 
-        [HttpGet("get-unavailable-seat-ids/{movieId}/{cinemaHallId}/{startTime}")]
-        public IActionResult GetUnavailableSeatIds(int movieId, int cinemaHallId, DateTime startTime)
+        [HttpGet("get-unavailable-seat-ids/{cinemaId}/{movieId}/{cinemaHallId}/{startTime}")]
+        public IActionResult GetUnavailableSeatIds(int cinemaId, int movieId, int cinemaHallId, DateTime startTime)
         {
-            var seatIds = _ticketRepository.GetUnavailableSeatIds(movieId, cinemaHallId, startTime);
+            var seatIds = _ticketRepository.GetUnavailableSeatIds(cinemaId, movieId, cinemaHallId, startTime);
             if (seatIds == null || !seatIds.Any())
             {
                 return Ok(new List<int>());

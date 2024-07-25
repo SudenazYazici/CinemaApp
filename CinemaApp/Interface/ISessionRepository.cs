@@ -6,8 +6,8 @@ namespace CinemaApp.Interface
     {
         ICollection<Session> GetSessions();
         Session GetSession(int id);
-        Session GetSession(int movieId, int cinemaHallId, DateTime startTime);
-        ICollection<Session> GetSessions(int movieId, int cinemaHallId);
+        Session GetSession(int cinemaId, int movieId, int cinemaHallId, DateTime startTime);
+        ICollection<Session> GetSessions(int cinemaId, int movieId, int cinemaHallId);
         //Session GetSession(int movieId, int cinemaHallId, DateTime startTime);
 
         bool SessionExists(int id);

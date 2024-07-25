@@ -3,6 +3,8 @@
     public class Session
     {
         public int Id { get; set; }
+        public int CinemaId { get; set; }
+        public Cinema Cinema { get; set; }
         public int CinemaHallId { get; set; }
         public CinemaHall CinemaHall { get; set; }
         public int MovieId { get; set; }
