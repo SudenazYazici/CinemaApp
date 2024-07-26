@@ -3,12 +3,14 @@ using CinemaApp.Dto;
 using CinemaApp.Interface;
 using CinemaApp.Models;
 using CinemaApp.Repository;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CinemaApp.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Policy = "Admin")]
     public class TicketController : Controller
     {
         private readonly ITicketRepository _ticketRepository;
@@ -55,6 +57,7 @@ namespace CinemaApp.Controllers
         [HttpGet("{id}")]
         [ProducesResponseType(200, Type = typeof(Ticket))]
         [ProducesResponseType(400)]
+        [AllowAnonymous]
         public IActionResult GetTicket(int id)
         {
             if (!_ticketRepository.TicketExists(id))
@@ -73,6 +76,7 @@ namespace CinemaApp.Controllers
         [HttpPost]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
+        [AllowAnonymous]
         public IActionResult CreateTicket([FromBody] TicketDto ticketCreate)
         {
             if (ticketCreate == null)
@@ -191,6 +195,7 @@ namespace CinemaApp.Controllers
         [ProducesResponseType(400)]
         [ProducesResponseType(204)]
         [ProducesResponseType(404)]
+        [AllowAnonymous]
         public IActionResult DeleteTicket(int id) { 
             
             if(!_ticketRepository.TicketExists(id)) return NotFound();
@@ -208,6 +213,7 @@ namespace CinemaApp.Controllers
         }
 
         [HttpGet("get-unavailable-seat-ids/{cinemaId}/{movieId}/{cinemaHallId}/{startTime}")]
+        [AllowAnonymous]
         public IActionResult GetUnavailableSeatIds(int cinemaId, int movieId, int cinemaHallId, DateTime startTime)
         {
             var seatIds = _ticketRepository.GetUnavailableSeatIds(cinemaId, movieId, cinemaHallId, startTime);

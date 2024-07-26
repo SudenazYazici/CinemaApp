@@ -14,6 +14,7 @@ namespace CinemaApp.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Policy = "Admin")]
     public class UserController : Controller
     {
         private readonly IUserRepository _userRepository;
@@ -43,6 +44,7 @@ namespace CinemaApp.Controllers
         [HttpGet("{id}")]
         [ProducesResponseType(200, Type = typeof(User))]
         [ProducesResponseType(400)]
+        [AllowAnonymous]
         public IActionResult GetUser(int id) { 
             if(!_userRepository.UserExists(id))
             {
@@ -60,6 +62,7 @@ namespace CinemaApp.Controllers
         [HttpGet("{id}/tickets")] 
         [ProducesResponseType(200, Type = typeof(Ticket))]
         [ProducesResponseType(400)]
+        [AllowAnonymous]
         public IActionResult GetTicketsByUser(int id)
         {
             if (!_userRepository.UserExists(id))
@@ -159,6 +162,7 @@ namespace CinemaApp.Controllers
         }
 
         [HttpPost("register")]
+        [AllowAnonymous]
         public ActionResult<User> Register(UserDto request) {
 
             if (!ModelState.IsValid) {
@@ -188,34 +192,8 @@ namespace CinemaApp.Controllers
             return Ok(newUser);
         }
 
-        //[HttpPost("login")]
-        //[ProducesResponseType(404)]
-        //public IActionResult logIn([FromBody]string email, [FromBody] string password)
-        //{
-        //    bool userExists = false;
-        //    var users = _userRepository.GetUsers();
-
-        //    for (int i = 0; i < users.Count; i++)
-        //    {
-        //        var user = _userRepository.GetUsers().ElementAt(i);
-        //        if (user.Email == email && BCrypt.Net.BCrypt.Verify(password, user.Password))
-        //        {
-        //            userExists = true;
-        //            return Ok(user);
-        //        }
-        //    }
-
-        //    if (!userExists)
-        //    {
-        //        return BadRequest("User not found.");
-        //    }
-
-        //    string token = CreateToken(user);
-        //    return Ok(token);
-
-        //}
-
         [HttpPost("login")]
+        [AllowAnonymous]
         public ActionResult<User> Login(LoginDto request)
         {
             var user = _userRepository.GetUserByEmail(request.Email);
@@ -245,24 +223,46 @@ namespace CinemaApp.Controllers
 
         private string CreateToken(User user)
         {
-            List<Claim> claims = new List<Claim>{
-                new Claim(ClaimTypes.Name, user.Name)
-            };
+            //List<Claim> claims = new List<Claim>{
+            //    new Claim(ClaimTypes.Name, user.Name),
+            //    new Claim(ClaimTypes.Role, user.Role)
+            //};
+
+            //var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(
+            //    _configuration.GetSection("AppSettings:Token").Value!));
+
+            //var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
+
+            //var token = new JwtSecurityToken(
+            //        claims: claims,
+            //        expires: DateTime.Now.AddDays(1),
+            //        signingCredentials: creds
+            //    );
+
+            //var jwt = new JwtSecurityTokenHandler().WriteToken(token);
+
+            //return jwt;
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(
-                _configuration.GetSection("AppSettings:Token").Value!));
+                _configuration["Jwt:Key"]));
 
-            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256Signature);
+
+            var claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.Name, user.Name),
+                new Claim(ClaimTypes.Role, user.Role)
+            };
 
             var token = new JwtSecurityToken(
-                    claims: claims,
-                    expires: DateTime.Now.AddDays(1),
-                    signingCredentials: creds
-                );
+                issuer: _configuration["Jwt:Issuer"],
+                audience: _configuration["Jwt:Audience"],
+                claims: claims,
+                expires: DateTime.Now.AddDays(1),
+                signingCredentials: creds
+            );
 
-            var jwt = new JwtSecurityTokenHandler().WriteToken(token);
-
-            return jwt;
+            return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
     }

@@ -3,12 +3,14 @@ using CinemaApp.Dto;
 using CinemaApp.Interface;
 using CinemaApp.Models;
 using CinemaApp.Repository;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CinemaApp.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Policy = "Admin")]
     public class SeatController : Controller
     {
         private readonly ISeatRepository _seatRepository;
@@ -24,6 +26,7 @@ namespace CinemaApp.Controllers
 
         [HttpGet]
         [ProducesResponseType(200, Type = typeof(IEnumerable<Seat>))]
+        [AllowAnonymous]
         public IActionResult GetSeats()
         {
             var seats = _mapper.Map<List<SeatDto>>(_seatRepository.GetSeats());
@@ -37,6 +40,7 @@ namespace CinemaApp.Controllers
         [HttpGet("{id}")]
         [ProducesResponseType(200, Type = typeof(Seat))]
         [ProducesResponseType(400)]
+        [AllowAnonymous]
         public IActionResult GetSeat(int id)
         {
             if (!_seatRepository.SeatExists(id))

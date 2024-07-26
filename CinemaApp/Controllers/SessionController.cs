@@ -3,12 +3,14 @@ using CinemaApp.Dto;
 using CinemaApp.Interface;
 using CinemaApp.Models;
 using CinemaApp.Repository;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CinemaApp.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Policy = "Admin")]
     public class SessionController : Controller
     {
         private readonly ISessionRepository _sessionRepository;
@@ -28,6 +30,7 @@ namespace CinemaApp.Controllers
 
         [HttpGet]
         [ProducesResponseType(200, Type = typeof(IEnumerable<Session>))]
+        [AllowAnonymous]
         public IActionResult GetSessions()
         {
             var sessions = _mapper.Map<List<SessionDto>>(_sessionRepository.GetSessions());
@@ -41,6 +44,7 @@ namespace CinemaApp.Controllers
         [HttpGet("{id}")]
         [ProducesResponseType(200, Type = typeof(Session))]
         [ProducesResponseType(400)]
+        [AllowAnonymous]
         public IActionResult GetSession(int id)
         {
             if (!_sessionRepository.SessionExists(id))
@@ -57,6 +61,7 @@ namespace CinemaApp.Controllers
         }
 
         [HttpGet("get-sessions/{cinemaId}/{movieId}/{cinemaHallId}")]
+        [AllowAnonymous]
         public IActionResult GetSessions(int cinemaId, int movieId, int cinemaHallId)
         {
             var sessions = _sessionRepository.GetSessions(cinemaId, movieId, cinemaHallId);
@@ -191,6 +196,7 @@ namespace CinemaApp.Controllers
         //}
 
         [HttpGet("get-session/{cinemaId}/{movieId}/{cinemaHallId}/{startTime}")]
+        [AllowAnonymous]
         public IActionResult GetSession(int cinemaId, int movieId, int cinemaHallId, DateTime startTime)
         {
             var session = _sessionRepository.GetSession(cinemaId, movieId, cinemaHallId, startTime);

@@ -3,12 +3,14 @@ using CinemaApp.Dto;
 using CinemaApp.Interface;
 using CinemaApp.Models;
 using CinemaApp.Repository;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CinemaApp.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Policy = "Admin")]
     public class CinemaController(
         ICinemaRepository cinemaRepository,
         IMapper mapper,
@@ -17,6 +19,7 @@ namespace CinemaApp.Controllers
     {
         [HttpGet]
         [ProducesResponseType(200, Type = typeof(IEnumerable<Cinema>))]
+        [AllowAnonymous]
         public IActionResult GetCinemas()
         {
             var cinemas = mapper.Map<List<CinemaDto>>(cinemaRepository.GetCinemas());
@@ -30,6 +33,7 @@ namespace CinemaApp.Controllers
         [HttpGet("{id}")]
         [ProducesResponseType(200, Type = typeof(Cinema))]
         [ProducesResponseType(400)]
+        [AllowAnonymous]
         public IActionResult GetCinema(int id)
         {
             if (!cinemaRepository.CinemaExists(id))
@@ -134,6 +138,7 @@ namespace CinemaApp.Controllers
         }
 
         [HttpGet("{cinemaId}/cinemaHalls")]
+        [AllowAnonymous]
         public IActionResult GetCinemaHalls(int cinemaId)
         {
             var cinemaHalls = cinemaRepository.GetCinemaHalls(cinemaId)
@@ -144,6 +149,7 @@ namespace CinemaApp.Controllers
         }
 
         [HttpGet("{cinemaId}/movies")]
+        [AllowAnonymous]
         public IActionResult GetMoviesOfCinema(int cinemaId)
         {
             var movies = cinemaMovieRepository.GetMoviesOfCinema(cinemaId);

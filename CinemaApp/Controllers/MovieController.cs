@@ -3,12 +3,14 @@ using CinemaApp.Dto;
 using CinemaApp.Interface;
 using CinemaApp.Models;
 using CinemaApp.Repository;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CinemaApp.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Policy = "Admin")]
     public class MovieController(IMovieRepository movieRepository, IMapper mapper, ICinemaMovieRepository cinemaMovieRepository, ISessionRepository sessionRepository)
         : Controller
     {
@@ -32,6 +34,7 @@ namespace CinemaApp.Controllers
 
         [HttpGet]
         [ProducesResponseType(200, Type = typeof(IEnumerable<Movie>))]
+        [AllowAnonymous]
         public IActionResult GetMovies()
         {
             var movies = mapper.Map<List<MovieDto>>(movieRepository.GetMovies());
@@ -46,6 +49,7 @@ namespace CinemaApp.Controllers
         [HttpGet("by-name/{name}")]
         [ProducesResponseType(200, Type = typeof(Movie))]
         [ProducesResponseType(400)]
+        [AllowAnonymous]
         public IActionResult GetMovie(string name)
         {
             var movie = mapper.Map<MovieDto>(movieRepository.GetMovie(name));
@@ -60,6 +64,7 @@ namespace CinemaApp.Controllers
         [HttpGet("by-id/{id}")]
         [ProducesResponseType(200, Type = typeof(Movie))]
         [ProducesResponseType(400)]
+        [AllowAnonymous]
         public IActionResult GetMovie(int id)
         {
             if (!movieRepository.MovieExists(id))
@@ -179,6 +184,7 @@ namespace CinemaApp.Controllers
         }
 
         [HttpGet("{movieId}/cinemas")]
+        [AllowAnonymous]
         public IActionResult GetCinemasOfMovie(int movieId)
         {
             var cinemas = cinemaMovieRepository.GetCinemasOfMovie(movieId);
@@ -200,6 +206,7 @@ namespace CinemaApp.Controllers
         }
 
         [HttpGet("{movieId}/sessions")]
+        [AllowAnonymous]
         public IActionResult GetSessionsOfMovie(int movieId)
         {
             var sessions = sessionRepository.GetSessionsOfMovie(movieId);
@@ -207,6 +214,7 @@ namespace CinemaApp.Controllers
         }
 
         [HttpGet("{movieId}/cinemaHalls")]
+        [AllowAnonymous]
         public IActionResult GetCinemaHallsOfMovie(int movieId)
         {
             var cinemaHalls = sessionRepository.GetCinemaHallsOfMovie(movieId);
